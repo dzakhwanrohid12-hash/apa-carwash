@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===========================
+   FONTS
+=========================== */
+
+@font-face {
+    font-family: "Syne";
+    src: url("/fonts/Syne-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Syne";
+    src: url("/fonts/Syne-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Inter";
+    src: url("/fonts/Inter-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "JetBrains Mono";
+    src: url("/fonts/JetBrainsMono-SemiBold.ttf") format("truetype");
+
+    font-weight: 600;
+
+    font-display: swap;
+}
+
+:root {
+    color-scheme: light;
+
+    --primary: #f2c94c;
+
+    --primary-dark: #d4a91d;
+
+    --secondary: #214761;
+
+    --secondary-dark: #132033;
+
+    --surface: #fbfcfd;
+
+    --surface-soft: #f7f9fb;
+
+    --text: #132033;
+
+    --text-muted: #64748b;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        background: var(--surface);
+
+        color: var(--text);
+
+        font-family: "Inter";
+
+        overflow-x: hidden;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: "Syne";
+
+        letter-spacing: -0.03em;
+    }
+}
+
+@layer components {
+    .section {
+        @apply max-w-7xl mx-auto px-6 xl:px-8;
+    }
+
+    .card {
+        @apply bg-white rounded-[30px] border border-secondary-100;
+
+        box-shadow: 0 24px 60px rgba(19, 32, 51, 0.05);
+    }
+
+    .card-hover {
+        @apply hover:border-secondary-400;
+
+        box-shadow: 0 30px 80px rgba(19, 32, 51, 0.08);
+    }
+
+    .button-primary {
+        @apply bg-primary-300 text-secondary-700;
+    }
+
+    .button-primary:hover {
+        @apply bg-primary-400;
+    }
+
+    .button-secondary {
+        @apply bg-secondary-500 text-white;
+    }
+
+    .button-secondary:hover {
+        @apply bg-secondary-600;
+    }
+}
+
+.bg-water {
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(242, 201, 76, 0.1),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at left center,
+            rgba(24, 52, 74, 0.05),
+            transparent 35%
+        );
+}
+
+.glass {
+    background: rgba(255, 255, 255, 0.78);
+
+    backdrop-filter: blur(20px);
+}
+
+.shadow-soft {
+    box-shadow: 0 20px 60px rgba(19, 32, 51, 0.05);
+}
+
+.shadow-premium {
+    box-shadow: 0 40px 120px rgba(19, 32, 51, 0.1);
+}

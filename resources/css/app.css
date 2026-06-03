@@ -147,3 +147,43 @@
 .shadow-premium {
     box-shadow: 0 40px 120px rgba(19, 32, 51, 0.1);
 }
+
+/* Custom Modern Scrollbar */
+
+/* Untuk Chrome, Safari, dan Edge */
+::-webkit-scrollbar {
+    width: 6px; /* Membuat scrollbar vertikal lebih tipis */
+    height: 6px; /* Membuat scrollbar horizontal lebih tipis */
+}
+
+/* Jalur belakang scrollbar (Track) */
+::-webkit-scrollbar-track {
+    background: transparent; /* Transparan agar menyatu dengan warna background apa pun (Navy atau Putih) */
+}
+
+/* Pegangan scrollbar (Thumb) */
+::-webkit-scrollbar-thumb {
+    background: rgba(
+        148,
+        163,
+        184,
+        0.3
+    ); /* Warna Slate (Abu-abu kebiruan) yang sangat transparan dan elegan */
+    border-radius: 10px; /* Membuat ujungnya membulat halus */
+}
+
+/* Efek saat pegangan scrollbar di-hover/disentuh kursor */
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(
+        245,
+        158,
+        11,
+        0.8
+    ); /* Berubah menjadi warna Amber/Kuning khas tema kita! */
+}
+
+/* Fallback untuk Firefox (Hanya mendukung pengaturan standar) */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+}

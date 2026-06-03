@@ -1,5 +1,6 @@
 import MainLayout from "@/Layouts/MainLayout";
 import { Head, useForm } from "@inertiajs/react";
+import { motion } from "framer-motion";
 import TextInput from "@/Components/TextInput";
 import InputLabel from "@/Components/InputLabel";
 import InputError from "@/Components/InputError";
@@ -22,25 +23,48 @@ export default function OperationalSettings({ settings }) {
         <MainLayout>
             <Head title="Pengaturan Operasional" />
 
-            <div className="mb-8">
-                <h1 className="text-3xl font-display font-bold text-neutral-50">
-                    Jam Operasional
-                </h1>
-                <p className="text-neutral-400">
-                    Atur jam buka kedai dan durasi slot reservasi untuk
-                    pelanggan.
-                </p>
+            {/* Background Ornaments */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none z-[-1]">
+                <div className="absolute left-[-10%] top-[10%] w-[500px] h-[500px] rounded-full bg-amber-400/10 blur-[120px]" />
+                <div className="absolute right-[-10%] bottom-[10%] w-[600px] h-[600px] rounded-full bg-sky-300/10 blur-[120px]" />
             </div>
 
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="mb-8"
+            >
+                <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-800 mb-2">
+                    Jam <span className="text-amber-500">Operasional</span>
+                </h1>
+                <p className="text-slate-500 font-medium">
+                    Atur jam buka kedai dan durasi pembagian slot reservasi
+                    untuk pelanggan.
+                </p>
+            </motion.div>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="md:col-span-2 bg-secondary-800 p-6 md:p-8 rounded-2xl border border-tertiary-800/50 shadow-lg">
-                    <form onSubmit={submit} className="space-y-6">
+                {/* Form Settings */}
+                <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                    className="md:col-span-2 bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/40 relative overflow-hidden h-fit"
+                >
+                    {/* Inner Ornament */}
+                    <div className="absolute top-0 left-0 w-40 h-40 bg-amber-400/10 blur-3xl rounded-full pointer-events-none" />
+
+                    <form onSubmit={submit} className="space-y-6 relative z-10">
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div>
-                                <InputLabel value="Jam Buka" />
+                                <InputLabel
+                                    value="Jam Buka"
+                                    className="text-slate-700 mb-2"
+                                />
                                 <TextInput
                                     type="time"
-                                    className="w-full mt-1 font-mono"
+                                    className="w-full bg-slate-50 border-slate-200 focus:border-amber-400 focus:ring-amber-400/20 rounded-xl py-3.5 font-mono text-lg text-slate-800"
                                     value={data.open_time}
                                     onChange={(e) =>
                                         setData("open_time", e.target.value)
@@ -49,14 +73,18 @@ export default function OperationalSettings({ settings }) {
                                 />
                                 <InputError
                                     message={errors.open_time}
-                                    className="mt-2 text-red-400"
+                                    className="mt-2 text-red-500"
                                 />
                             </div>
+
                             <div>
-                                <InputLabel value="Jam Tutup (Tutup Order)" />
+                                <InputLabel
+                                    value="Jam Tutup (Tutup Order)"
+                                    className="text-slate-700 mb-2"
+                                />
                                 <TextInput
                                     type="time"
-                                    className="w-full mt-1 font-mono"
+                                    className="w-full bg-slate-50 border-slate-200 focus:border-amber-400 focus:ring-amber-400/20 rounded-xl py-3.5 font-mono text-lg text-slate-800"
                                     value={data.close_time}
                                     onChange={(e) =>
                                         setData("close_time", e.target.value)
@@ -65,85 +93,122 @@ export default function OperationalSettings({ settings }) {
                                 />
                                 <InputError
                                     message={errors.close_time}
-                                    className="mt-2 text-red-400"
+                                    className="mt-2 text-red-500"
                                 />
                             </div>
+
                             <div className="sm:col-span-2">
-                                <InputLabel value="Durasi Per Slot Reservasi (Menit)" />
-                                <TextInput
-                                    type="number"
-                                    className="w-full mt-1 font-mono"
-                                    value={data.slot_duration_minutes}
-                                    onChange={(e) =>
-                                        setData(
-                                            "slot_duration_minutes",
-                                            e.target.value,
-                                        )
-                                    }
-                                    required
+                                <InputLabel
+                                    value="Durasi Per Slot Reservasi"
+                                    className="text-slate-700 mb-2"
                                 />
+                                <div className="relative">
+                                    <TextInput
+                                        type="number"
+                                        className="w-full bg-slate-50 border-slate-200 focus:border-amber-400 focus:ring-amber-400/20 rounded-xl py-3.5 font-mono text-lg text-slate-800"
+                                        value={data.slot_duration_minutes}
+                                        onChange={(e) =>
+                                            setData(
+                                                "slot_duration_minutes",
+                                                e.target.value,
+                                            )
+                                        }
+                                        required
+                                    />
+                                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold bg-slate-100 px-3 py-1 rounded-md">
+                                        Menit
+                                    </span>
+                                </div>
                                 <InputError
                                     message={errors.slot_duration_minutes}
-                                    className="mt-2 text-red-400"
+                                    className="mt-2 text-red-500"
                                 />
                             </div>
                         </div>
 
-                        <div className="flex justify-end pt-6 border-t border-tertiary-800/50">
+                        <div className="flex justify-end pt-6 border-t border-slate-100 mt-8">
                             <PrimaryButton
                                 disabled={processing}
-                                className="gap-2"
+                                className="px-8 py-3.5"
                             >
-                                <Save size={18} /> Simpan Pengaturan
+                                <span className="flex flex-row items-center justify-center gap-2 whitespace-nowrap">
+                                    <Save size={18} /> Simpan Pengaturan
+                                </span>
                             </PrimaryButton>
                         </div>
                     </form>
-                </div>
+                </motion.div>
 
                 {/* Info Card Panel */}
-                <div className="bg-primary-300/10 border border-primary-300/20 p-6 rounded-2xl h-fit">
-                    <div className="flex items-center gap-2 text-primary-300 mb-4">
-                        <Info size={24} />
-                        <h3 className="font-bold text-lg font-display">
+                <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-200/50 p-6 md:p-8 rounded-[2rem] h-fit shadow-lg shadow-amber-500/5 relative overflow-hidden"
+                >
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/20 blur-2xl rounded-full pointer-events-none" />
+
+                    <div className="flex items-center gap-3 text-amber-600 mb-6 relative z-10">
+                        <div className="p-2.5 bg-amber-100 rounded-xl">
+                            <Info size={24} />
+                        </div>
+                        <h3 className="font-bold text-xl font-display text-slate-800">
                             Cara Kerja Slot
                         </h3>
                     </div>
-                    <ul className="space-y-3 text-sm text-neutral-300">
-                        <li className="flex gap-2">
+
+                    <ul className="space-y-4 text-[15px] text-slate-600 leading-relaxed relative z-10">
+                        <li className="flex gap-3">
                             <Clock
-                                size={16}
-                                className="shrink-0 mt-0.5 text-primary-400"
+                                size={18}
+                                className="shrink-0 mt-0.5 text-amber-500"
                             />
                             <span>
-                                Sistem akan membagi rentang dari{" "}
-                                <strong>Jam Buka</strong> hingga{" "}
-                                <strong>Jam Tutup</strong> berdasarkan{" "}
-                                <strong>Durasi Slot</strong>.
+                                Sistem akan membagi otomatis rentang waktu dari{" "}
+                                <strong className="text-slate-800">
+                                    Jam Buka
+                                </strong>{" "}
+                                hingga{" "}
+                                <strong className="text-slate-800">
+                                    Jam Tutup
+                                </strong>{" "}
+                                berdasarkan{" "}
+                                <strong className="text-slate-800">
+                                    Durasi Slot
+                                </strong>
+                                .
                             </span>
                         </li>
-                        <li className="flex gap-2">
+                        <li className="flex gap-3">
                             <Clock
-                                size={16}
-                                className="shrink-0 mt-0.5 text-primary-400"
+                                size={18}
+                                className="shrink-0 mt-0.5 text-amber-500"
                             />
                             <span>
-                                Misal: Buka 07:30, Durasi 60 menit. Maka pilihan
+                                <strong className="text-slate-800 block mb-1">
+                                    Contoh Simulasi:
+                                </strong>
+                                Buka 07:30, Durasi 60 menit. Maka pilihan
                                 pelanggan di form adalah 07:30, 08:30, 09:30,
                                 dst.
                             </span>
                         </li>
-                        <li className="flex gap-2">
+                        <li className="flex gap-3">
                             <Clock
-                                size={16}
-                                className="shrink-0 mt-0.5 text-primary-400"
+                                size={18}
+                                className="shrink-0 mt-0.5 text-amber-500"
                             />
                             <span>
-                                Jika jadwal sudah terlewat di hari ini, slot
-                                tersebut akan disembunyikan secara otomatis.
+                                Jika jadwal sudah terlewat (berlalu) di hari
+                                ini, slot tersebut akan{" "}
+                                <strong className="text-slate-800">
+                                    disembunyikan secara otomatis
+                                </strong>{" "}
+                                dari pelanggan.
                             </span>
                         </li>
                     </ul>
-                </div>
+                </motion.div>
             </div>
         </MainLayout>
     );

@@ -49,6 +49,7 @@ export default function Login({ status, canResetPassword }) {
                     <TextInput
                         type="password"
                         value={data.password}
+                        placeholder="*******"
                         onChange={(e) => setData("password", e.target.value)}
                     />
                     <InputError message={errors.password} />

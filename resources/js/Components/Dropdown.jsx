@@ -6,26 +6,11 @@ const DropDownContext = createContext();
 
 const Dropdown = ({ children }) => {
     const [open, setOpen] = useState(false);
-
-    const toggleOpen = () => {
-        setOpen((v) => !v);
-    };
+    const toggleOpen = () => setOpen((v) => !v);
 
     return (
-        <DropDownContext.Provider
-            value={{
-                open,
-                setOpen,
-                toggleOpen,
-            }}
-        >
-            <div
-                className="
-relative
-"
-            >
-                {children}
-            </div>
+        <DropDownContext.Provider value={{ open, setOpen, toggleOpen }}>
+            <div className="relative">{children}</div>
         </DropDownContext.Provider>
     );
 };
@@ -35,24 +20,13 @@ const Trigger = ({ children }) => {
 
     return (
         <>
-            <div
-                onClick={toggleOpen}
-                className="
-cursor-pointer
-"
-            >
+            <div onClick={toggleOpen} className="cursor-pointer">
                 {children}
             </div>
 
             {open && (
                 <div
-                    className="
-fixed
-
-inset-0
-
-z-[70]
-"
+                    className="fixed inset-0 z-[70]"
                     onClick={() => setOpen(false)}
                 />
             )}
@@ -62,102 +36,31 @@ z-[70]
 
 const Content = ({
     align = "right",
-
     width = "56",
-
     contentClasses = "",
-
     children,
 }) => {
     const { open, setOpen } = useContext(DropDownContext);
 
-    let alignment = "";
-
-    if (align === "left") {
-        alignment = "left-0";
-    }
-
-    if (align === "right") {
-        alignment = "right-0";
-    }
-
-    let widthClass = "";
-
-    if (width === "48") {
-        widthClass = "w-48";
-    }
-
-    if (width === "56") {
-        widthClass = "w-56";
-    }
+    const alignment = align === "left" ? "left-0" : "right-0";
+    const widthClass = width === "48" ? "w-48" : "w-56";
 
     return (
         <Transition
             show={open}
-            enter="
-transition
-duration-300
-"
-            enterFrom="
-opacity-0
-translate-y-2
-scale-[.98]
-"
-            enterTo="
-opacity-100
-translate-y-0
-scale-100
-"
-            leave="
-transition
-duration-200
-"
-            leaveFrom="
-opacity-100
-"
-            leaveTo="
-opacity-0
-translate-y-2
-"
+            enter="transition duration-300"
+            enterFrom="opacity-0 translate-y-2 scale-[.98]"
+            enterTo="opacity-100 translate-y-0 scale-100"
+            leave="transition duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0 translate-y-2"
         >
             <div
-                className={`
-
-absolute
-
-z-[80]
-
-mt-4
-
-${alignment}
-
-${widthClass}
-
-`}
+                className={`absolute z-[80] mt-4 ${alignment} ${widthClass}`}
                 onClick={() => setOpen(false)}
             >
                 <div
-                    className={`
-
-overflow-hidden
-
-rounded-[22px]
-
-border
-
-border-secondary-100
-
-bg-white/92
-
-backdrop-blur-xl
-
-shadow-[0_28px_80px_rgba(19,32,51,.12)]
-
-p-2
-
-${contentClasses}
-
-`}
+                    className={`overflow-hidden rounded-[24px] border border-secondary-100 bg-white shadow-[0_30px_80px_rgba(19,32,51,.12)] ring-1 ring-primary-300/10 ${contentClasses}`}
                 >
                     {children}
                 </div>
@@ -166,47 +69,11 @@ ${contentClasses}
     );
 };
 
-const DropdownLink = ({
-    className = "",
-
-    children,
-
-    ...props
-}) => {
+const DropdownLink = ({ className = "", children, ...props }) => {
     return (
         <Link
             {...props}
-            className={`
-
-flex
-
-items-center
-
-w-full
-
-rounded-[16px]
-
-px-4
-
-py-3
-
-text-[14px]
-
-font-medium
-
-text-text
-
-transition-all
-
-duration-300
-
-hover:bg-secondary-500
-
-hover:text-white
-
-${className}
-
-`}
+            className={`flex items-center gap-3 w-full rounded-[16px] px-4 py-3 text-[14px] font-medium text-secondary-700 transition-all duration-300 hover:bg-[linear-gradient(135deg,#F7D86A,#F2C94C)] hover:text-secondary-700 hover:shadow-[0_10px_30px_rgba(242,201,76,.18)] ${className}`}
         >
             {children}
         </Link>
@@ -214,9 +81,7 @@ ${className}
 };
 
 Dropdown.Trigger = Trigger;
-
 Dropdown.Content = Content;
-
 Dropdown.Link = DropdownLink;
 
 export default Dropdown;

@@ -8,6 +8,9 @@ import {
     Phone,
     Mail,
     ChevronRight,
+    LayoutDashboard,
+    User,
+    LogOut,
 } from "lucide-react";
 import Dropdown from "@/Components/Dropdown";
 import NavLink from "@/Components/NavLink";
@@ -43,12 +46,36 @@ export default function GuestLayout({ children }) {
                     <ChevronDown size={18} />
                 </button>
             </Dropdown.Trigger>
-            <Dropdown.Content>
-                <Dropdown.Link href="/dashboard">Dashboard</Dropdown.Link>
-                <Dropdown.Link href="/profile">Pengaturan Profil</Dropdown.Link>
-                <Dropdown.Link href={route("logout")} method="post" as="button">
-                    Keluar
-                </Dropdown.Link>
+            <Dropdown.Content width="56">
+                <div className="px-4 py-3 border-b border-secondary-100">
+                    <div className="font-semibold text-secondary-700">
+                        {auth?.user?.name}
+                    </div>
+
+                    <div className="text-xs text-text-muted">Akun Pengguna</div>
+                </div>
+
+                <div className="p-2">
+                    <Dropdown.Link href="/customer/dashboard">
+                        <LayoutDashboard size={18} />
+                        Dashboard
+                    </Dropdown.Link>
+
+                    <Dropdown.Link href="/profile">
+                        <User size={18} />
+                        Pengaturan Profil
+                    </Dropdown.Link>
+
+                    <Dropdown.Link
+                        href={route("logout")}
+                        method="post"
+                        as="button"
+                        className="text-red-500 hover:bg-red-50 hover:text-red-600"
+                    >
+                        <LogOut size={18} />
+                        Keluar
+                    </Dropdown.Link>
+                </div>
             </Dropdown.Content>
         </Dropdown>
     ) : null;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Cashier;
 
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
@@ -14,7 +14,7 @@ class EmployeeController extends Controller
         // Hanya kirim data master karyawan ke frontend (UI Index.jsx yang baru)
         $employees = Employee::latest()->get();
 
-        return Inertia::render('Admin/Employees/Index', [
+        return Inertia::render('Cashier/Employees/Index', [
             'employees' => $employees,
         ]);
     }

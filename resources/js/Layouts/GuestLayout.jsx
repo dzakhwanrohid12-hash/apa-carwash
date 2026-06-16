@@ -263,7 +263,7 @@ export default function GuestLayout({ children }) {
                                 Bantu kami meningkatkan pelayanan dan
                                 pengalaman.
                             </p>
-                            <PrimaryButton className="max-w-[180px]">
+                            <PrimaryButton className="max-w-[180px]" onClick={() => (window.location.href = "/contact")}>
                                 Kirim Kritik
                             </PrimaryButton>
                         </div>

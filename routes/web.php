@@ -13,12 +13,12 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\VoucherController;
-use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ReportController;
 
 // Cashier Controllers
 use App\Http\Controllers\Cashier\DashboardController as CashierDashboardController;
+use App\Http\Controllers\Cashier\EmployeeController;
 use App\Http\Controllers\Cashier\POSController;
 use App\Http\Controllers\Cashier\TransactionController;
 use App\Http\Controllers\Cashier\QueueController;
@@ -28,6 +28,7 @@ use App\Http\Controllers\Customer\ReservationController;
 use App\Http\Controllers\Customer\FeedbackController;
 use App\Http\Controllers\Api\AvailabilityController;
 use App\Services\VoucherService;
+use App\Http\Controllers\Auth\SocialiteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -96,12 +97,6 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('/services', AdminServiceController::class)->except(['show']);
     Route::resource('/vouchers', VoucherController::class)->except(['show']);
 
-    Route::get('/employees', [EmployeeController::class, 'index'])->name('employees.index');
-    Route::post('/employees', [EmployeeController::class, 'store'])->name('employees.store');
-    Route::put('/employees/availability', [EmployeeController::class, 'updateAvailability'])->name('employees.availability.update');
-    Route::put('/employees/{employee}/toggle', [EmployeeController::class, 'toggleActive'])->name('employees.toggle');
-    Route::delete('/employees/{employee}', [EmployeeController::class, 'destroy'])->name('employees.destroy');
-
     Route::get('/settings/operational', [SettingController::class, 'operational'])->name('settings.operational');
     Route::put('/settings/operational', [SettingController::class, 'updateOperational'])->name('settings.operational.update');
 
@@ -165,6 +160,11 @@ Route::middleware('auth')->group(function () {
     })->name('api.voucher.validate');
 });
 
+// Rute untuk Login Google
+Route::middleware('guest')->group(function () {
+    Route::get('/auth/google', [SocialiteController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('/auth/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
+});
 
 /* Bawaan Laravel Breeze (Login, Register) */
 require __DIR__.'/auth.php';

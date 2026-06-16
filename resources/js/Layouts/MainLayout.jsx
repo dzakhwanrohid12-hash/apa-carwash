@@ -34,11 +34,6 @@ export default function MainLayout({ children }) {
         { title: "Manajemen Layanan", icon: Wrench, href: "/admin/services" },
         { title: "Manajemen Voucher", icon: Ticket, href: "/admin/vouchers" },
         {
-            title: "Manajemen Pekerja",
-            icon: CalendarClock,
-            href: "/admin/employees",
-        },
-        {
             title: "Operasional",
             icon: Settings,
             href: "/admin/settings/operational",
@@ -52,6 +47,11 @@ export default function MainLayout({ children }) {
             title: "Dashboard",
             icon: LayoutDashboard,
             href: "/cashier/dashboard",
+        },
+        {
+            title: "Manajemen Karyawan",
+            icon: CalendarClock,
+            href: "/cashier/employees",
         },
         { title: "POS", icon: MonitorPlay, href: "/cashier/pos" },
         { title: "Reservasi", icon: ListTodo, href: "/cashier/transactions" },

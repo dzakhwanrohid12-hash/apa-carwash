@@ -62,4 +62,17 @@ class VoucherService
             'used_at' => now(),
         ]);
     }
+
+    /**
+     * Mengambil daftar voucher aktif untuk ditampilkan di halaman beranda.
+     */
+    public function getActiveVouchersForDisplay(int $limit = 6)
+    {
+        return Voucher::where('is_active', true)
+            ->whereDate('valid_until', '>=', Carbon::today())
+            ->whereColumn('used_count', '<', 'quota')
+            ->latest()
+            ->take($limit)
+            ->get();
+    }
 }

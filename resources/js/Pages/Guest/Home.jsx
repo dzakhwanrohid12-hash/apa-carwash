@@ -1,13 +1,33 @@
 import GuestLayout from "@/Layouts/GuestLayout";
 import { Head, Link } from "@inertiajs/react";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar, ShieldCheck, Clock3 } from "lucide-react";
+import { useState } from "react";
+import {
+    ArrowRight,
+    Calendar,
+    ShieldCheck,
+    Clock3,
+    Ticket,
+    Copy,
+    CheckCircle,
+    Clock,
+} from "lucide-react";
 import ServiceCard from "@/Components/Shared/ServiceCard";
 
 export default function Home({
     services = [],
     stats = { total_transactions: 0 },
+    vouchers = [], // Tambahkan props vouchers
 }) {
+    const [copiedCode, setCopiedCode] = useState(null);
+
+    // Fungsi untuk menyalin kode voucher ke clipboard
+    const handleCopy = (code) => {
+        navigator.clipboard.writeText(code);
+        setCopiedCode(code);
+        setTimeout(() => setCopiedCode(null), 3000);
+    };
+
     return (
         <GuestLayout>
             <Head title="Beranda" />
@@ -62,12 +82,12 @@ export default function Home({
                                 >
                                     Reservasi Sekarang <ArrowRight size={18} />
                                 </Link>
-                                <Link
-                                    href="/services"
-                                    className="h-[56px] px-8 rounded-[18px] border border-[#DCE4EB] text-[#132033] font-semibold inline-flex items-center hover:bg-[#F8FAFC] transition"
+                                <a
+                                    href="#promo"
+                                    className="h-[56px] px-8 rounded-[18px] border border-[#DCE4EB] text-[#132033] font-semibold inline-flex items-center gap-2 hover:bg-[#F8FAFC] transition cursor-pointer"
                                 >
-                                    Lihat Layanan
-                                </Link>
+                                    Lihat Promo <Ticket size={18} />
+                                </a>
                             </motion.div>
 
                             {/* STATS (Menggunakan Data Dinamis + Stagger Effect) */}
@@ -156,6 +176,179 @@ export default function Home({
                     </div>
                 </div>
             </section>
+            {/* SECTION VOUCHER DINAMIS */}
+            <section
+                id="promo"
+                className="relative overflow-hidden py-28 bg-[linear-gradient(135deg,#132033_0%,#162740_100%)] text-white"
+            >
+                {/* Background Effects & Wave */}
+                <div className="absolute inset-0 pointer-events-none">
+                    {/* Glowing Orbs */}
+                    <div className="absolute left-[-200px] top-[-200px] w-[600px] h-[600px] rounded-full bg-[#14B8A6]/10 blur-[100px]" />
+                    <div className="absolute right-[-200px] bottom-[-200px] w-[600px] h-[600px] rounded-full bg-[#F2C94C]/10 blur-[100px]" />
+
+                    {/* SVG Wave Bottom */}
+                    <svg
+                        className="absolute bottom-0 left-0 w-full opacity-[.06] transform translate-y-1"
+                        viewBox="0 0 1440 320"
+                        preserveAspectRatio="none"
+                    >
+                        <path
+                            fill="#F2C94C"
+                            d="M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+                        ></path>
+                    </svg>
+
+                    {/* SVG Wave Top (Flipped) */}
+                    <svg
+                        className="absolute top-0 left-0 w-full opacity-[.04] rotate-180 transform -translate-y-1"
+                        viewBox="0 0 1440 320"
+                        preserveAspectRatio="none"
+                    >
+                        <path
+                            fill="#14B8A6"
+                            d="M0,256L48,229.3C96,203,192,149,288,154.7C384,160,480,224,576,218.7C672,213,768,139,864,128C960,117,1056,171,1152,197.3C1248,224,1344,224,1392,224L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+                        ></path>
+                    </svg>
+                </div>
+
+                <div className="max-w-7xl mx-auto px-6 relative z-10">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        className="text-center mb-16"
+                    >
+                        <div className="inline-flex items-center gap-2 mb-8 rounded-full bg-white/5 border border-white/10 px-5 py-2 text-[#F2C94C] font-semibold text-sm">
+                            <Ticket size={16} /> Promo Spesial
+                        </div>
+                        <h2 className="font-display font-bold leading-[1.1] text-[40px] md:text-[56px] text-white mb-6">
+                            Voucher &{" "}
+                            <div className="inline-block mt-2 md:mt-0 bg-[#F2C94C] text-[#132033] px-4 py-1">
+                                Diskon
+                            </div>
+                        </h2>
+                        <p className="text-[#D7E2EB] font-medium text-[18px] max-w-2xl mx-auto leading-9">
+                            Salin kode voucher di bawah ini dan gunakan saat
+                            melakukan checkout reservasi online untuk
+                            mendapatkan potongan harga.
+                        </p>
+                    </motion.div>
+
+                    {vouchers.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {vouchers.map((voucher, index) => (
+                                <motion.div
+                                    key={voucher.id}
+                                    initial={{ opacity: 0, y: 40 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true, margin: "-50px" }}
+                                    transition={{
+                                        duration: 0.6,
+                                        delay: index * 0.1,
+                                        type: "spring",
+                                    }}
+                                    className="flex bg-white rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden relative group hover:-translate-y-2 transition-all duration-300"
+                                >
+                                    {/* Sisi Kiri Tiket (Nominal Diskon) */}
+                                    <div className="bg-[#F2C94C] p-6 flex flex-col items-center justify-center text-[#132033] border-r-[3px] border-dashed border-[#132033]/20 w-[35%] relative">
+                                        {/* Potongan efek tiket sobek */}
+                                        <div className="absolute -top-4 -right-4 w-8 h-8 bg-[#162740] rounded-full" />
+                                        <div className="absolute -bottom-4 -right-4 w-8 h-8 bg-[#162740] rounded-full" />
+
+                                        <span className="text-3xl lg:text-4xl font-black mb-1 tracking-tight">
+                                            {voucher.discount_type ===
+                                            "percentage"
+                                                ? `${voucher.discount_value}%`
+                                                : `Rp${voucher.discount_value / 1000}K`}
+                                        </span>
+                                        <span className="text-[11px] font-bold uppercase tracking-widest text-[#132033]/70 bg-white/30 px-3 py-1 rounded-md mt-1">
+                                            Potongan
+                                        </span>
+                                    </div>
+
+                                    {/* Sisi Kanan Tiket (Detail) */}
+                                    <div className="p-6 flex-1 flex flex-col justify-center bg-white relative">
+                                        <p className="text-[12px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                                            <ShieldCheck
+                                                size={14}
+                                                className="text-[#14B8A6]"
+                                            />{" "}
+                                            Min. Trx Rp{" "}
+                                            {new Intl.NumberFormat(
+                                                "id-ID",
+                                            ).format(voucher.min_transaction)}
+                                        </p>
+
+                                        <div className="flex items-center justify-between mb-3">
+                                            <span className="font-mono font-black text-2xl text-[#132033] tracking-wider">
+                                                {voucher.code}
+                                            </span>
+                                        </div>
+
+                                        <p className="text-[12px] text-slate-500 flex items-center gap-1.5 font-bold mb-5">
+                                            <Clock
+                                                size={14}
+                                                className="text-[#F2C94C]"
+                                            />{" "}
+                                            Berlaku s/d{" "}
+                                            {new Date(
+                                                voucher.valid_until,
+                                            ).toLocaleDateString("id-ID", {
+                                                day: "numeric",
+                                                month: "short",
+                                                year: "numeric",
+                                            })}
+                                        </p>
+
+                                        {/* Tombol Salin Interaktif */}
+                                        <button
+                                            onClick={() =>
+                                                handleCopy(voucher.code)
+                                            }
+                                            className={`w-full py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all duration-300 ${
+                                                copiedCode === voucher.code
+                                                    ? "bg-[#14B8A6]/10 text-[#14B8A6] border border-[#14B8A6]/30 shadow-inner"
+                                                    : "bg-slate-50 text-slate-600 border border-slate-200 hover:bg-[#F2C94C]/10 hover:text-[#D4A91D] hover:border-[#F2C94C]/30 shadow-sm hover:shadow-md"
+                                            }`}
+                                        >
+                                            {copiedCode === voucher.code ? (
+                                                <>
+                                                    <CheckCircle size={18} />{" "}
+                                                    Tersalin!
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Copy size={18} /> Salin
+                                                    Kode Promo
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+                    ) : (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            className="text-center py-20 px-6 bg-white/5 border border-dashed border-white/20 rounded-[32px] max-w-3xl mx-auto backdrop-blur-sm"
+                        >
+                            <div className="bg-white/10 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/10">
+                                <Ticket className="text-[#F2C94C]" size={40} />
+                            </div>
+                            <h3 className="text-3xl font-bold text-white mb-3">
+                                Belum Ada Promo Saat Ini
+                            </h3>
+                            <p className="text-[#D7E2EB] font-medium text-lg">
+                                Nantikan kejutan promo dan potongan harga
+                                spesial dari kami di waktu mendatang!
+                            </p>
+                        </motion.div>
+                    )}
+                </div>
+            </section>
 
             {/* SERVICES */}
             <section className="relative py-24 bg-white">
@@ -173,7 +366,8 @@ export default function Home({
                     >
                         <div className="inline-flex items-center gap-3 mb-6 text-[#D4A91D] font-semibold">
                             <div className="w-12 h-[2px] bg-[#14B8A6]" />{" "}
-                            LAYANAN
+                            LAYANAN KAMI{" "}
+                            <div className="w-12 h-[2px] bg-[#14B8A6]" />
                         </div>
                         <h2 className="font-display font-bold text-[48px] leading-none text-[#132033]">
                             Perawatan{" "}
@@ -274,7 +468,7 @@ export default function Home({
                 </div>
             </section>
 
-            {/* CTA (Animasi Muncul dari Bawah, Desain Lama Dipertahankan) */}
+            {/* CTA */}
             <section className="relative overflow-hidden py-24 bg-[linear-gradient(135deg,#132033_0%,#162740_100%)] text-white">
                 <div className="absolute inset-0 pointer-events-none">
                     <div className="absolute left-[-220px] bottom-[-220px] w-[700px] h-[700px] rounded-full bg-[#14B8A6]/10 blur-3xl" />

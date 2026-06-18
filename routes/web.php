@@ -35,12 +35,15 @@ use App\Http\Controllers\Auth\SocialiteController;
 | Public Routes (GuestLayout)
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () {
+Route::get('/', function (VoucherService $voucherService) {
     return Inertia::render('Guest/Home', [
+        // Mengambil data services dan stats bawaan Anda sebelumnya
         'services' => \App\Models\Service::with('category')->where('is_active', true)->take(6)->get(),
         'stats' => [
             'total_transactions' => \App\Models\Transaction::where('payment_status', 'lunas')->count()
-        ]
+        ],
+        // Menambahkan data vouchers melalui Service yang baru kita buat
+        'vouchers' => $voucherService->getActiveVouchersForDisplay(6)
     ]);
 })->name('home');
 

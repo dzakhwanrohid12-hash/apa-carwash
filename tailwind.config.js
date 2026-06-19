@@ -34,40 +34,39 @@ export default {
                     100: "#E7EDF3",
                     200: "#D4DEE7",
                     300: "#93A6B9",
-
                     400: "#36546D",
-
                     500: "#214761",
-
                     600: "#18344A",
-
                     700: "#132033",
                 },
 
                 surface: {
                     DEFAULT: "#FBFCFD",
-
                     soft: "#F7F9FB",
-
                     muted: "#EEF3F7",
                 },
 
                 text: {
                     DEFAULT: "#132033",
-
                     muted: "#64748B",
-
                     soft: "#93A6B9",
                 },
 
                 success: "#2E7D32",
-
                 danger: "#D14343",
-
                 warning: "#D4A91D",
             },
         },
     },
 
-    plugins: [forms],
+    plugins: [
+        forms,
+        require("daisyui"), // Menambahkan plugin Daisy UI
+    ],
+
+    // Konfigurasi khusus untuk Daisy UI
+    daisyui: {
+        themes: false, // Set false agar warna custom 'primary', 'secondary' Anda tidak ditimpa
+        darkTheme: "light", // Memaksa komponen dasar menggunakan warna mode terang
+    },
 };

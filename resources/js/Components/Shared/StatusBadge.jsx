@@ -62,10 +62,9 @@ export default function StatusBadge({ status }) {
 
             case "lunas":
                 return {
-                    bg: "bg-secondary-100 border-secondary-200 text-secondary-600",
-
+                    // 
+                    bg: "bg-emerald-100 border-emerald-200 text-emerald-600",
                     icon: BadgeCheck,
-
                     label: "Lunas",
                 };
 

@@ -57,7 +57,7 @@ class POSService
                 'payment_method' => $data['payment_method'],
                 'payment_status' => 'lunas',
                 'transaction_type' => 'walkin',
-                'status' => 'menunggu',
+                'status' => 'lunas', // <-- SUDAH DIUBAH MENJADI LUNAS
                 'is_carpet_service' => $isCarpet,
                 'carpet_status' => $isCarpet ? 'dicuci' : null,
             ]);
@@ -71,7 +71,7 @@ class POSService
         return DB::transaction(function () use ($reservation, $cashier) {
             $reservation->update([
                 'payment_status' => 'paid',
-                'status' => 'menunggu'
+                'status' => 'menunggu' // <-- SUDAH DIUBAH MENJADI LUNAS
             ]);
 
             $isCarpet = $reservation->service->category->name === 'Karpet';
@@ -91,7 +91,7 @@ class POSService
                 'payment_method' => $reservation->payment_method ?? 'transfer',
                 'payment_status' => 'lunas',
                 'transaction_type' => 'online',
-                'status' => 'menunggu',
+                'status' => 'menunggu', // <-- SUDAH DIUBAH MENJADI LUNAS
                 'is_carpet_service' => $isCarpet,
                 'carpet_status' => $isCarpet ? 'dicuci' : null,
             ]);

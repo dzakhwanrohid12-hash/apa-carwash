@@ -115,7 +115,13 @@ export default function Index({ queues, employees }) {
                                                 </span>
                                             </div>
                                         </div>
-                                        <StatusBadge status={queue.status} />
+                                       <StatusBadge
+    status={
+        queue.status === "menunggu" && queue.payment_status === "lunas"
+            ? "lunas"
+            : queue.status
+    }
+/>
                                     </div>
 
                                     <div className="space-y-4 mb-6 relative z-10">
@@ -167,39 +173,25 @@ export default function Index({ queues, employees }) {
                                     </div>
                                 </div>
 
-                                {/* Area Tombol Aksi */}
-                                <div className="pt-4 border-t border-slate-100 relative z-10">
-                                    {queue.status === "menunggu" &&
-                                    queue.employee_id ? (
+                                {/* Area Aksi (Mulai / Selesai) */}
+                                <div  div className="pt-4 border-t border-slate-100 relative z-10">
+                                    {(queue.status === "lunas" || queue.status === "menunggu") && queue.employee_id ? (
                                         <button
-                                            onClick={() =>
-                                                handleUpdateStatus(
-                                                    queue.id,
-                                                    "diproses",
-                                                )
-                                            }
+                                            onClick={() => handleUpdateStatus(queue.id, "diproses")}
                                             className="w-full flex items-center justify-center gap-2 px-4 py-3.5 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded-xl font-bold shadow-md hover:shadow-lg transition-all"
                                         >
-                                            <Play size={18} /> Mulai Proses
-                                            Pencucian
+                                            <Play size={18} /> Mulai Proses Pencucian
                                         </button>
                                     ) : queue.status === "diproses" ? (
                                         <button
-                                            onClick={() =>
-                                                handleUpdateStatus(
-                                                    queue.id,
-                                                    "selesai",
-                                                )
-                                            }
+                                            onClick={() => handleUpdateStatus(queue.id, "selesai")}
                                             className="w-full flex items-center justify-center gap-2 px-4 py-3.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-600 rounded-xl font-bold shadow-sm transition-all"
                                         >
-                                            <CheckCircle2 size={18} />{" "}
-                                            Selesaikan Pesanan
+                                            <CheckCircle2 size={18} /> Selesaikan Pesanan
                                         </button>
                                     ) : (
                                         <p className="text-center text-xs font-bold text-slate-400 py-3 bg-slate-50 rounded-xl border border-dashed border-slate-200">
-                                            Pilih karyawan terlebih dahulu untuk
-                                            memulai.
+                                            Pilih karyawan terlebih dahulu untuk memulai.
                                         </p>
                                     )}
                                 </div>

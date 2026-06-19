@@ -183,8 +183,7 @@ export default function CashierDashboard({
                                 </h3>
                                 <p className="text-slate-400 text-sm font-medium mb-6">
                                     Catat transaksi pelanggan yang datang
-                                    langsung (Walk-in) ke kedai dan cetak struk
-                                    pembayaran.
+                                    langsung (Walk-in)
                                 </p>
                                 <div className="mt-auto flex items-center text-amber-400 text-sm font-bold">
                                     Buat Transaksi Baru{" "}
@@ -213,7 +212,7 @@ export default function CashierDashboard({
                                     Manajemen Antrean
                                 </h3>
                                 <p className="text-slate-500 text-sm font-medium mb-6">
-                                    Tugaskan pekerja ke kendaraan yang akan
+                                    Tugaskan karyawan ke kendaraan yang akan
                                     dicuci dan perbarui status pengerjaan secara
                                     real-time.
                                 </p>

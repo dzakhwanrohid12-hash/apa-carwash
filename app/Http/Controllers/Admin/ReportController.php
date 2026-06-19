@@ -7,6 +7,7 @@ use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportController extends Controller
 {
@@ -45,5 +46,31 @@ class ReportController extends Controller
             'chartData' => $chartData,
             'filters' => ['start' => $startDate, 'end' => $endDate]
         ]);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $startDate = $request->query('start', Carbon::now()->startOfMonth()->toDateString());
+        $endDate = $request->query('end', Carbon::today()->toDateString());
+
+        $transactions = Transaction::with(['service', 'cashier'])
+            ->where('payment_status', 'lunas')
+            ->whereBetween('created_at', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+            ->orderBy('created_at', 'asc') // Diurutkan dari yang paling lama agar rapi di laporan
+            ->get();
+
+        $stats = [
+            'total_revenue' => $transactions->sum('total'),
+            'total_transactions' => $transactions->count(),
+        ];
+
+        // Memuat tampilan (view) dari file report.blade.php
+        $pdf = Pdf::loadView('exports.report', compact('transactions', 'stats', 'startDate', 'endDate'));
+
+        // Mengatur ukuran kertas dan orientasi
+        $pdf->setPaper('A4', 'portrait');
+
+        // Mengunduh file
+        return $pdf->download('Laporan-Pendapatan-APACarWash-' . $startDate . '-sd-' . $endDate . '.pdf');
     }
 }

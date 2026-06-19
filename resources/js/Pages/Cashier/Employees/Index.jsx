@@ -72,10 +72,10 @@ export default function Index({ employees }) {
                 className="mb-8"
             >
                 <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-800 mb-2">
-                    Manajemen <span className="text-amber-500">Pekerja</span>
+                    Manajemen <span className="text-amber-500">Karyawan</span>
                 </h1>
                 <p className="text-slate-500 font-medium">
-                    Kelola data tim Anda dan atur status ketersediaan mereka
+                    Kelola data karyawan Anda dan atur status ketersediaan mereka
                     dalam menangani pencucian.
                 </p>
             </motion.div>
@@ -96,7 +96,7 @@ export default function Index({ employees }) {
                             <UserPlus size={20} />
                         </div>
                         <h2 className="text-xl font-bold text-slate-800">
-                            Tambah Pekerja
+                            Tambah Karyawan
                         </h2>
                     </div>
 
@@ -149,7 +149,7 @@ export default function Index({ employees }) {
                                 className="w-full justify-center py-3.5 mt-2"
                             >
                                 <span className="flex flex-row items-center justify-center gap-2 whitespace-nowrap text-[15px]">
-                                    <Plus size={18} /> Simpan Data Pekerja
+                                    <Plus size={18} /> Simpan Data Karyawan
                                 </span>
                             </PrimaryButton>
                         </div>
@@ -169,7 +169,7 @@ export default function Index({ employees }) {
                         </div>
                         <div>
                             <h2 className="text-xl font-bold text-slate-800 leading-tight">
-                                Daftar Pekerja Tim
+                                Daftar Karyawan
                             </h2>
                             <p className="text-sm text-slate-500">
                                 Atur siapa yang sedang stand-by.
@@ -296,10 +296,10 @@ export default function Index({ employees }) {
                                     <Users size={32} />
                                 </div>
                                 <p className="text-slate-600 font-bold text-lg mb-1">
-                                    Belum Ada Pekerja
+                                    Belum Ada Karyawan Ditambahkan
                                 </p>
                                 <p className="text-slate-500 text-sm">
-                                    Silakan tambahkan data pekerja tim Anda
+                                    Silakan tambahkan data karyawan Anda
                                     melalui form di samping.
                                 </p>
                             </div>

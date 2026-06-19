@@ -16,6 +16,7 @@ export default function UpdateProfileInformation({
         useForm({
             name: user.name,
             email: user.email,
+            phone: user.phone_number || '',
         });
 
     const submit = (e) => {
@@ -51,6 +52,21 @@ export default function UpdateProfileInformation({
                     />
 
                     <InputError className="mt-2" message={errors.name} />
+                </div>
+
+                <div>
+                <InputLabel htmlFor="phone" value="Nomor WhatsApp" />
+
+                <TextInput
+                    id="phone"
+                    type="tel"
+                    className="mt-1 block w-full bg-secondary-900 border-tertiary-700 text-neutral-100 focus:border-primary-500 focus:ring-primary-500"
+                    value={data.phone}
+                    onChange={(e) => setData("phone", e.target.value)}
+                    placeholder="Contoh: 081234567890"
+                />
+
+                <InputError className="mt-2" message={errors.phone} />
                 </div>
 
                 <div>

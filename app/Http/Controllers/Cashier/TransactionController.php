@@ -44,13 +44,20 @@ class TransactionController extends Controller
         $request->validate(['notes' => 'required|string']);
 
         try {
+            // 1. Batalkan di tabel reservations
             $transaction->update([
                 'payment_status' => 'rejected',
                 'status' => 'dibatalkan',
                 'notes' => 'Ditolak: ' . $request->notes
             ]);
 
-            return back()->with('success', 'Pembayaran ditolak.');
+            // 2. Batalkan juga di tabel transactions yang terhubung (agar tidak nyangkut)
+            Transaction::where('reservation_id', $transaction->id)->update([
+                'payment_status' => 'dibatalkan',
+                'status' => 'dibatalkan'
+            ]);
+
+            return back()->with('success', 'Pembayaran berhasil ditolak.');
         } catch (\Exception $e) {
             dd([
                 'STATUS' => 'TANGKAP ERROR PENOLAKAN',

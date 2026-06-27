@@ -19,7 +19,7 @@ class QueueController extends Controller
     {
         $queues = Transaction::with(['service', 'employee', 'user'])
             ->whereDate('created_at', Carbon::today())
-            ->whereIn('status', ['menunggu', 'diproses'])
+            ->whereIn('status', ['lunas', 'menunggu', 'diproses'])
             ->orderBy('created_at', 'asc')
             ->get();
 

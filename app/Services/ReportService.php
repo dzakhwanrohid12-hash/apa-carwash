@@ -43,11 +43,29 @@ class ReportService
             ];
         }
 
+        $topServices = Transaction::with('service')
+            ->where('payment_status', 'lunas')
+            ->when($period === 'today', fn($q) => $q->whereDate('created_at', $queryDate))
+            ->when($period !== 'today', fn($q) => $q->where('created_at', '>=', $queryDate))
+            ->get()
+            ->groupBy('service_id')
+            ->map(function ($group) {
+                return [
+                    'name' => $group->first()->service ? $group->first()->service->name : 'Layanan Dihapus',
+                    'orders' => $group->count(),
+                ];
+            })
+            ->sortByDesc('orders')
+            ->take(5)
+            ->values()
+            ->toArray();
+
         return [
             'revenue' => $revenue,
             'transaction_count' => $transactionCount,
             'pending_reservations' => $pendingReservations,
-            'chart_data' => $chartData
+            'chart_data' => $chartData,
+            'top_services' => $topServices
         ];
     }
 }

@@ -1,7 +1,7 @@
 import MainLayout from "@/Layouts/MainLayout";
 import { Head, router } from "@inertiajs/react";
 import StatCard from "@/Components/Shared/StatCard";
-import { Wallet, Activity, CalendarClock, TrendingUp } from "lucide-react";
+import { Wallet, Activity, CalendarClock, TrendingUp, Award} from "lucide-react";
 import {
     XAxis,
     YAxis,
@@ -67,6 +67,48 @@ export default function Dashboard({ summary, filters }) {
                         subtitle="Perlu diproses"
                         icon={CalendarClock}
                     />
+                </div>
+
+                                {/* TOP SERVICES */}
+                <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-slate-100">
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="p-2.5 bg-amber-50 rounded-xl text-amber-500 shadow-sm">
+                            <Award size={20} />
+                        </div>
+                        <h3 className="text-xl font-bold text-slate-800">
+                            Layanan Paling Sering Dipesan
+                        </h3>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                        {summary.top_services && summary.top_services.length > 0 ? (
+                            summary.top_services.map((service, index) => (
+                                <div
+                                    key={index}
+                                    className="flex items-center justify-between p-4 bg-slate-50 hover:bg-slate-100/80 transition-colors rounded-2xl border border-slate-100"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow-sm ${
+                                            index === 0 ? "bg-amber-400 text-white" :
+                                            index === 1 ? "bg-slate-300 text-slate-700" :
+                                            index === 2 ? "bg-amber-600/30 text-amber-800" :
+                                            "bg-white text-slate-500 border border-slate-200"
+                                        }`}>
+                                            {index + 1}
+                                        </div>
+                                        <span className="font-bold text-slate-700">{service.name}</span>
+                                    </div>
+                                    <div className="text-xs font-bold text-slate-500 bg-white px-2.5 py-1.5 rounded-lg border border-slate-200 shadow-sm">
+                                        {service.orders} pesanan
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="col-span-full py-8 text-center text-slate-500 font-medium bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                                Belum ada data transaksi untuk periode ini.
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* CHART */}

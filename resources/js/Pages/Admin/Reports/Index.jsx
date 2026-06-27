@@ -7,6 +7,7 @@ import {
     TrendingUp,
     Search,
     Calendar as CalendarIcon,
+    Printer,
 } from "lucide-react";
 import {
     LineChart,
@@ -107,7 +108,7 @@ export default function ReportIndex({
                 <div className="absolute right-[-10%] bottom-[10%] w-[600px] h-[600px] rounded-full bg-sky-300/10 blur-[120px]" />
             </div>
 
-            {/* Header & Filter */}
+ {/* Header & Filter */}
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -124,33 +125,46 @@ export default function ReportIndex({
                     </p>
                 </div>
 
-                <form
-                    onSubmit={handleFilter}
-                    className="flex flex-col sm:flex-row items-center gap-3 bg-white p-2.5 rounded-2xl border border-slate-200 shadow-lg shadow-slate-200/40 w-full xl:w-auto"
-                >
-                    <div className="flex items-center gap-2 w-full sm:w-auto px-2">
-                        <input
-                            type="date"
-                            value={start}
-                            onChange={(e) => setStart(e.target.value)}
-                            className="w-full sm:w-auto bg-slate-50 border-slate-200 text-slate-700 font-medium text-sm rounded-xl focus:ring-4 focus:ring-amber-400/20 focus:border-amber-400"
-                        />
-                        <span className="text-slate-400 font-bold">-</span>
-                        <input
-                            type="date"
-                            value={end}
-                            onChange={(e) => setEnd(e.target.value)}
-                            className="w-full sm:w-auto bg-slate-50 border-slate-200 text-slate-700 font-medium text-sm rounded-xl focus:ring-4 focus:ring-amber-400/20 focus:border-amber-400"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full sm:w-auto px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
+                {/* WRAPPER BARU UNTUK FORM DAN TOMBOL PDF */}
+                <div className="flex flex-col sm:flex-row items-center gap-3 w-full xl:w-auto">
+                    <form
+                        onSubmit={handleFilter}
+                        className="flex flex-col sm:flex-row items-center gap-3 bg-white p-2.5 rounded-2xl border border-slate-200 shadow-lg shadow-slate-200/40 w-full sm:w-auto"
                     >
-                        <Search size={18} />{" "}
-                        <span className="sm:hidden">Terapkan Filter</span>
-                    </button>
-                </form>
+                        <div className="flex items-center gap-2 w-full sm:w-auto px-2">
+                            <input
+                                type="date"
+                                value={start}
+                                onChange={(e) => setStart(e.target.value)}
+                                className="w-full sm:w-auto bg-slate-50 border-slate-200 text-slate-700 font-medium text-sm rounded-xl focus:ring-4 focus:ring-amber-400/20 focus:border-amber-400"
+                            />
+                            <span className="text-slate-400 font-bold">-</span>
+                            <input
+                                type="date"
+                                value={end}
+                                onChange={(e) => setEnd(e.target.value)}
+                                className="w-full sm:w-auto bg-slate-50 border-slate-200 text-slate-700 font-medium text-sm rounded-xl focus:ring-4 focus:ring-amber-400/20 focus:border-amber-400"
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className="w-full sm:w-auto px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-amber-400 font-bold rounded-xl transition-all shadow-md flex items-center justify-center gap-2"
+                        >
+                            <Search size={18} />{" "}
+                            <span className="sm:hidden">Terapkan Filter</span>
+                        </button>
+                    </form>
+
+                    {/* TOMBOL EXPORT PDF */}
+                    <a
+                        href={`/admin/reports/export-pdf?start=${start}&end=${end}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="w-full sm:w-auto px-6 py-3.5 bg-red-500 hover:bg-red-600 text-white font-bold rounded-2xl transition-all shadow-lg shadow-red-500/20 flex items-center justify-center gap-2"
+                    >
+                        <Printer size={18} /> <span>Cetak PDF</span>
+                    </a>
+                </div>
             </motion.div>
 
             {/* Custom Stat Cards */}

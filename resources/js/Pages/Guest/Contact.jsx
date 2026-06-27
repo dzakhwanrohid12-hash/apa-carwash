@@ -129,10 +129,10 @@ export default function Contact() {
                             </div>
                             <div>
                                 <h3 className="font-bold text-lg text-slate-800 mb-2 font-display">
-                                    Lokasi Kedai
+                                    Lokasi Car Wash
                                 </h3>
                                 <p className="text-slate-500 leading-relaxed">
-                                    Jl. Kaharuddin Nasution No. 123
+                                    Jl. Tiram No.28
                                     <br />
                                     Pekanbaru, Riau, Indonesia
                                     <br />
@@ -165,7 +165,7 @@ export default function Contact() {
                                         Email
                                     </h3>
                                     <p className="text-slate-500 font-medium">
-                                        halo@apacarwash.com
+                                        info@apacarwash.com
                                     </p>
                                 </div>
                             </div>

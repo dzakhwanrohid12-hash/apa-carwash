@@ -107,7 +107,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
     Route::put('/feedback/{feedback}/read', [FeedbackController::class, 'markAsRead'])->name('feedback.read');
-});
+
+    Route::get('/reports/export-pdf', [\App\Http\Controllers\Admin\ReportController::class, 'exportPdf'])->name('reports.export-pdf');});
 
 
 /*
@@ -124,6 +125,7 @@ Route::middleware(['auth', 'role:kasir'])->prefix('cashier')->name('cashier.')->
 
     Route::get('/transactions', [App\Http\Controllers\Cashier\TransactionController::class, 'index'])->name('transactions.index');
     Route::put('/transactions/{transaction}/validate', [App\Http\Controllers\Cashier\TransactionController::class, 'validatePayment'])->name('transactions.validate');
+    Route::put('/transactions/{transaction}/reject', [App\Http\Controllers\Cashier\TransactionController::class, 'rejectPayment'])->name('transactions.reject');
 
     Route::get('/queue', [App\Http\Controllers\Cashier\QueueController::class, 'index'])->name('queue.index');
     Route::put('/queue/{transaction}/assign', [App\Http\Controllers\Cashier\QueueController::class, 'assignEmployee'])->name('queue.assign');

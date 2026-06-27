@@ -2,19 +2,50 @@ import MainLayout from "@/Layouts/MainLayout";
 import { Head, useForm } from "@inertiajs/react";
 import Table from "@/Components/UI/Table";
 import { useState } from "react";
-import { CheckCircle, XCircle, Eye, ShieldCheck, User } from "lucide-react";
+import { CheckCircle, XCircle, Eye, ShieldCheck, User, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function TransactionIndex({ reservations }) {
     const [selectedProof, setSelectedProof] = useState(null);
-    const { put, processing } = useForm();
 
+    // State untuk Modal Penolakan
+    const [rejectingId, setRejectingId] = useState(null);
+
+    // Form untuk Validasi Lunas (tanpa data tambahan)
+    const { put: putValidate, processing: processingValidate } = useForm();
+
+    // Form khusus untuk Penolakan (wajib isi alasan/notes)
+    const { data: rejectData, setData: setRejectData, put: putReject, processing: processingReject, errors: rejectErrors, reset: resetReject, clearErrors } = useForm({
+        notes: ''
+    });
+
+    // Handler Validasi Lunas
     const handleValidate = (id) => {
-        if (
-            confirm("Validasi pembayaran ini dan masukkan pesanan ke antrean?")
-        ) {
-            put(route("cashier.transactions.validate", id));
+        if (confirm("Validasi pembayaran ini dan masukkan pesanan ke antrean?")) {
+            putValidate(route("cashier.transactions.validate", id));
         }
+    };
+
+    // Handler Buka Modal Tolak
+    const openRejectModal = (id) => {
+        setRejectingId(id);
+        resetReject();
+        clearErrors();
+    };
+
+    // Handler Tutup Modal Tolak
+    const closeRejectModal = () => {
+        setRejectingId(null);
+        resetReject();
+        clearErrors();
+    };
+
+    // Handler Submit Penolakan
+    const submitReject = (e) => {
+        e.preventDefault();
+        putReject(route("cashier.transactions.reject", rejectingId), {
+            onSuccess: () => closeRejectModal(),
+        });
     };
 
     const columns = [
@@ -101,15 +132,27 @@ export default function TransactionIndex({ reservations }) {
                         </button>
                     )}
 
+                    {/* Tombol Aksi Kasir (Hanya jika masih pending) */}
                     {row.payment_status === "pending_payment" && (
-                        <button
-                            onClick={() => handleValidate(row.id)}
-                            disabled={processing}
-                            className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg font-bold text-xs whitespace-nowrap disabled:opacity-50"
-                            title="Validasi Pembayaran Lunas"
-                        >
-                            <CheckCircle size={16} /> Validasi Lunas
-                        </button>
+                        <>
+                            <button
+                                onClick={() => openRejectModal(row.id)}
+                                disabled={processingValidate || processingReject}
+                                className="flex items-center gap-1.5 px-3 py-2 bg-red-50 hover:bg-red-100 border border-red-200 hover:border-red-300 text-red-600 hover:text-red-700 rounded-xl transition-all duration-300 shadow-sm font-bold text-xs whitespace-nowrap disabled:opacity-50"
+                                title="Tolak Pembayaran"
+                            >
+                                <XCircle size={16} /> Tolak
+                            </button>
+
+                            <button
+                                onClick={() => handleValidate(row.id)}
+                                disabled={processingValidate || processingReject}
+                                className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 hover:bg-slate-700 text-amber-400 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg font-bold text-xs whitespace-nowrap disabled:opacity-50"
+                                title="Validasi Pembayaran Lunas"
+                            >
+                                <CheckCircle size={16} /> Validasi Lunas
+                            </button>
+                        </>
                     )}
                 </div>
             ),
@@ -160,7 +203,7 @@ export default function TransactionIndex({ reservations }) {
                 />
             </motion.div>
 
-            {/* Modal untuk Preview Gambar (Dipercantik) */}
+            {/* Modal untuk Preview Gambar (Tampilan Bukti) */}
             <AnimatePresence>
                 {selectedProof && (
                     <motion.div
@@ -177,7 +220,6 @@ export default function TransactionIndex({ reservations }) {
                             className="relative max-w-3xl w-full bg-white rounded-3xl p-2 shadow-2xl border border-white/20"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            {/* Header Modal */}
                             <div className="absolute top-4 right-4 z-10 flex gap-2 bg-white/80 backdrop-blur-md p-1.5 rounded-full shadow-sm">
                                 <button
                                     onClick={() => setSelectedProof(null)}
@@ -199,6 +241,69 @@ export default function TransactionIndex({ reservations }) {
                                     }}
                                 />
                             </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Modal Konfirmasi Penolakan (Wajib Isi Alasan) */}
+            <AnimatePresence>
+                {rejectingId && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md"
+                        onClick={closeRejectModal}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                            className="relative max-w-md w-full bg-white rounded-3xl p-8 shadow-2xl border border-slate-100"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="flex items-center gap-4 mb-6 text-red-500">
+                                <div className="p-3 bg-red-50 rounded-2xl">
+                                    <AlertTriangle size={32} />
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold text-slate-800">Tolak Pembayaran</h3>
+                                    <p className="text-sm text-slate-500">Berikan alasan mengapa bukti tidak valid.</p>
+                                </div>
+                            </div>
+
+                            <form onSubmit={submitReject}>
+                                <div className="mb-6">
+                                    <textarea
+                                        value={rejectData.notes}
+                                        onChange={e => setRejectData('notes', e.target.value)}
+                                        placeholder="Contoh: Bukti transfer buram / nominal tidak sesuai tagihan."
+                                        rows="4"
+                                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-red-500/10 focus:border-red-500 text-slate-700 outline-none transition-all resize-none"
+                                        required
+                                    ></textarea>
+                                    {rejectErrors.notes && <p className="text-sm text-red-500 mt-2 pl-1">{rejectErrors.notes}</p>}
+                                </div>
+
+                                <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                                    <button
+                                        type="button"
+                                        onClick={closeRejectModal}
+                                        disabled={processingReject}
+                                        className="px-5 py-3 text-slate-500 font-bold hover:bg-slate-50 rounded-xl transition-colors"
+                                    >
+                                        Batal
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={processingReject || !rejectData.notes.trim()}
+                                        className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition-colors shadow-lg shadow-red-500/20 disabled:opacity-50"
+                                    >
+                                        Tolak Sekarang
+                                    </button>
+                                </div>
+                            </form>
                         </motion.div>
                     </motion.div>
                 )}

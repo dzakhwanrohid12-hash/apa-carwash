@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use App\Models\Reservation;
+use App\Models\User;
 use App\Services\ReservationService;
+use App\Services\WhatsAppService;
+use App\Jobs\SendWhatsAppNotification;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -55,14 +58,26 @@ class ReservationController extends Controller
                 $file = $request->file('payment_proof');
                 $filename = time() . '_' . $file->getClientOriginalName();
 
-                // PERBAIKAN: Menyimpan ke public disk (storage/app/public/payment_proof)
+                // Menyimpan ke public disk (storage/app/public/payment_proof)
                 $path = $file->storeAs('payment_proof', $filename, 'public');
-                $data['payment_proof'] = $path; // menghasilkan: "payment_proof/filename.jpg"
+                $data['payment_proof'] = $path;
             } else {
                 $data['payment_proof'] = null;
             }
 
-           $reservation = $reservationService->createReservation($data, auth()->user());
+            // Buat reservasi
+            $reservation = $reservationService->createReservation($data, auth()->user());
+
+            // --- FITUR WHATSAPP: NOTIFIKASI KE KASIR ---
+            $kasir = User::where('role', 'kasir')->first();
+            if ($kasir && $kasir->phone) {
+                $waService = new WhatsAppService();
+                $message = $waService->formatNewReservationMessage($reservation);
+
+                // Masukkan ke dalam antrean (Queue)
+                SendWhatsAppNotification::dispatch($kasir->phone, $message);
+            }
+            // -------------------------------------------
 
             return redirect()->route('customer.reservations.show', $reservation->id)
                 ->with('success', 'Reservasi berhasil dibuat!');

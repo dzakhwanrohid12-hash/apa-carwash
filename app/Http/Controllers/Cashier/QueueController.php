@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Cashier;
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
 use App\Models\Employee;
-use App\Models\Reservation; // Jangan lupa import model Reservation
+use App\Models\Reservation;
+use App\Services\WhatsAppService;
+use App\Jobs\SendWhatsAppNotification;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class QueueController extends Controller
 {
@@ -56,11 +59,26 @@ class QueueController extends Controller
             'status' => $request->status
         ]);
 
-        // 2. PERBAIKAN: Sinkronisasi ke Dashboard Pelanggan (tabel reservations)
+        // 2. Sinkronisasi ke Dashboard Pelanggan (tabel reservations)
         if ($transaction->reservation_id) {
             Reservation::where('id', $transaction->reservation_id)
                 ->update(['status' => $request->status]);
         }
+
+        // --- FITUR WHATSAPP: NOTIFIKASI KE PELANGGAN SAAT SELESAI ---
+        if ($request->status === 'selesai') {
+            // Pastikan relasi user dan layanannya di-load
+            $transaction->load(['user', 'service']);
+
+        if ($transaction->user && !empty($transaction->user->phone)) {
+        $waService = new WhatsAppService();
+        $message = $waService->formatJobCompleteMessage($transaction);
+
+        Log::info("WA Debug: Mengirim notif selesai ke " . $transaction->user->phone);
+        SendWhatsAppNotification::dispatch($transaction->user->phone, $message);
+        }
+        }
+        // ------------------------------------------------------------
 
         return back()->with('success', 'Status antrean berhasil diperbarui.');
     }

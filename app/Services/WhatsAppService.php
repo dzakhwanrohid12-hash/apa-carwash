@@ -1,58 +1,50 @@
 <?php
 
-    namespace App\Services;
+namespace App\Services;
 
-    use App\Models\Reservation;
-    use App\Models\Transaction;
-    use Illuminate\Support\Facades\Http;
-    use Illuminate\Support\Facades\Log;
+use App\Models\Reservation;
+use App\Models\Transaction;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
-    class WhatsAppService
+class WhatsAppService
+{
+    /**
+     * Core method untuk menembak API Fonnte
+     */
+    public function send(string $phone, string $message): bool
     {
-        /**
-         * Core method untuk menembak API Fonnte
-         */
-        // public function send(string $phone, string $message): bool
-        // {
-        //     try {
-        //         $response = Http::withHeaders([
-        //             'Authorization' => env('FONNTE_TOKEN'),
-        //         ])->post('https://api.fonnte.com/send', [
-        //             'target' => $phone,
-        //             'message' => $message,
-        //         ]);
-
-        //         return $response->json('status') === true;
-        //     } catch (\Exception $e) {
-        //         Log::error('Fonnte API Error: ' . $e->getMessage());
-        //         return false;
-        //     }
-        // }
-        public function send(string $phone, string $message): bool
-    {
-        // Cek apakah token Fonnte kosong atau bernilai default
-        if (empty(env('FONNTE_TOKEN')) || env('FONNTE_TOKEN') === 'masukkan_token_fonnte_anda_di_sini') {
-            // Catat pesan ke file storage/logs/laravel.log
+        // Pastikan token valid
+        $token = env('FONNTE_TOKEN');
+        if (empty($token) || $token === 'masukkan_token_fonnte_anda_di_sini') {
             Log::info("=== MOCK WHATSAPP NOTIFICATION ===");
             Log::info("To: {$phone}");
             Log::info("Message:\n{$message}");
             Log::info("==================================");
-
-            return true; // Pura-pura berhasil
+            return true;
         }
 
-        // Jika token ada, jalankan API sungguhan
         try {
-            $response = Http::withHeaders([
-                'Authorization' => env('FONNTE_TOKEN'),
-            ])->post('https://api.fonnte.com/send', [
-                'target' => $phone,
-                'message' => $message,
-            ]);
+            $response = Http::withoutVerifying()
+                ->timeout(30)
+                ->withHeaders([
+                    'Authorization' => $token,
+                ])
+                ->post('https://api.fonnte.com/send', [
+                    'target'  => $phone,
+                    'message' => $message,
+                ]);
 
-            return $response->json('status') === true;
+            // Cek apakah response berhasil dan status status true
+            if ($response->successful() && $response->json('status') === true) {
+                return true;
+            }
+
+            Log::error('Fonnte API Response Error: ' . $response->body());
+            return false;
+
         } catch (\Exception $e) {
-            Log::error('Fonnte API Error: ' . $e->getMessage());
+            Log::error('Fonnte API Exception: ' . $e->getMessage());
             return false;
         }
     }

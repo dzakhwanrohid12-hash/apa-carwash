@@ -147,43 +147,58 @@
 .shadow-premium {
     box-shadow: 0 40px 120px rgba(19, 32, 51, 0.1);
 }
-
-/* Custom Modern Scrollbar */
+/* ==========================================
+   CUSTOM MODERN SCROLLBAR (SOLID COLOR)
+   ========================================== */
 
 /* Untuk Chrome, Safari, dan Edge */
 ::-webkit-scrollbar {
-    width: 6px; /* Membuat scrollbar vertikal lebih tipis */
-    height: 6px; /* Membuat scrollbar horizontal lebih tipis */
+    width: 8px; /* Sedikit ditebalkan agar warna lebih terlihat */
+    height: 8px;
 }
 
 /* Jalur belakang scrollbar (Track) */
 ::-webkit-scrollbar-track {
-    background: transparent; /* Transparan agar menyatu dengan warna background apa pun (Navy atau Putih) */
+    background: transparent;
 }
 
-/* Pegangan scrollbar (Thumb) */
+/* Pegangan scrollbar (Thumb) - Normal State */
 ::-webkit-scrollbar-thumb {
-    background: rgba(
-        148,
-        163,
-        184,
-        0.3
-    ); /* Warna Slate (Abu-abu kebiruan) yang sangat transparan dan elegan */
-    border-radius: 10px; /* Membuat ujungnya membulat halus */
+    /* Menggunakan warna Teal SOLID agar tidak pudar/abu-abu */
+    background-color: #14b8a6;
+    border-radius: 10px;
 }
 
-/* Efek saat pegangan scrollbar di-hover/disentuh kursor */
+/* Pegangan scrollbar (Thumb) - Hover State */
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(
-        245,
-        158,
-        11,
-        0.8
-    ); /* Berubah menjadi warna Amber/Kuning khas tema kita! */
+    /* Warna Amber SOLID khas tema saat disentuh kursor */
+    background-color: #f2c94c;
 }
 
-/* Fallback untuk Firefox (Hanya mendukung pengaturan standar) */
+/* Fallback untuk Firefox (Wajib Solid Color) */
 * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+    scrollbar-color: #14b8a6 transparent;
+}
+/* --- LENIS SMOOTH SCROLLING --- */
+html.lenis,
+html.lenis body {
+    height: auto;
+    width: 100vw;
+}
+
+.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+    overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+    pointer-events: none;
 }
